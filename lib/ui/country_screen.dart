@@ -15,7 +15,7 @@ class CountryScreen extends StatefulWidget {
 
 class _CountryScreenState extends State<CountryScreen> {
   CountryProvider? countryProvider;
-  List<CountryElement> _filterCountries = [];
+  List<CountryRemoteModel> _filterCountries = [];
 
   void initState() {
     super.initState();
@@ -183,7 +183,7 @@ class _CountryScreenState extends State<CountryScreen> {
   }
 
   Future filter(languageName) async {
-    List<CountryElement> _tempCountries = [];
+    List<CountryRemoteModel> _tempCountries = [];
     _tempCountries.addAll(countryProvider!.countries);
     for (var v in _tempCountries) {
       for (var l in v.languages) {

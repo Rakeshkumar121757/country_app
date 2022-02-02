@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 
 class CountryProvider extends ChangeNotifier {
   Api _api = Api();
-  List<CountryElement> _countries = [];
+  List<CountryRemoteModel> _countries = [];
   List<Language> _languages = [];
-  CountryElement? _country;
+  CountryRemoteModel? _country;
 
-  List<CountryElement> get countries => _countries;
+  List<CountryRemoteModel> get countries => _countries;
   List<Language> get languages => _languages;
 
-  CountryElement? get country => _country;
+  CountryRemoteModel? get country => _country;
 
   Future refreshScreen() async {
     notifyListeners();
@@ -24,7 +24,7 @@ class CountryProvider extends ChangeNotifier {
   Future getCountryName() async {
     final result = await _api.getCountry();
     final decode = jsonDecode(result);
-    final parse = Data.fromJson(decode);
+    final parse = CountryItem.fromJson(decode);
     _countries = parse.countries;
     _countries.sort((a, b) => a.name.compareTo(b.name));
 
@@ -52,7 +52,7 @@ class CountryProvider extends ChangeNotifier {
         ));
         return;
       }
-      final parse = CountryElement.fromJson(decode['country']);
+      final parse = CountryRemoteModel.fromJson(decode['country']);
       _country = parse;
 
       notifyListeners();

@@ -2,29 +2,27 @@
 
 class CountryBaseModel {
   CountryBaseModel({
-    required this.data,
+    required this.country_item,
   });
-
-  Data data;
-
+  CountryItem country_item;
   factory CountryBaseModel.fromJson(Map<String, dynamic> json) => CountryBaseModel(
-    data: Data.fromJson(json["data"]),
+    country_item: CountryItem.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "data": data.toJson(),
+    "data": country_item.toJson(),
   };
 }
 
-class Data {
-  Data({
+class CountryItem {
+  CountryItem({
     required this.countries,
   });
 
-  List<CountryElement> countries;
+  List<CountryRemoteModel> countries;
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    countries: List<CountryElement>.from(json["countries"].map((x) => CountryElement.fromJson(x))),
+  factory CountryItem.fromJson(Map<String, dynamic> json) => CountryItem(
+    countries: List<CountryRemoteModel>.from(json["countries"].map((x) => CountryRemoteModel.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,8 +30,8 @@ class Data {
   };
 }
 
-class CountryElement {
-  CountryElement({
+class CountryRemoteModel {
+  CountryRemoteModel({
     required this.name,
     required this.languages,
   });
@@ -41,7 +39,7 @@ class CountryElement {
   String name;
   List<Language> languages;
 
-  factory CountryElement.fromJson(Map<String, dynamic> json) => CountryElement(
+  factory CountryRemoteModel.fromJson(Map<String, dynamic> json) => CountryRemoteModel(
     name: json["name"],
     languages: List<Language>.from(json["languages"].map((x) => Language.fromJson(x))),
   );
