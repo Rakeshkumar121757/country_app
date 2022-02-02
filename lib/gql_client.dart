@@ -65,12 +65,12 @@ class Api {
       }
     }
   ''';
-    final QueryResult result = await client!.query(
+    final QueryResult response = await client!.query(
       QueryOptions(
         document: gql(query),
       ),
     );
-    if (result.hasException) {
+    if (response.hasException) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Country Code doesn't exists"),
         backgroundColor: Colors.red,
@@ -78,6 +78,6 @@ class Api {
       return null;
     }
 
-    return json.encode(result.data);
+    return json.encode(response.data);
   }
 }
