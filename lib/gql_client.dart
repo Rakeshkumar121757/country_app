@@ -1,13 +1,12 @@
 import 'dart:convert';
 
+import 'package:countries/gql_query.dart';
 import 'package:countries/model/country_model.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Api {
-  final HttpLink httpLink = HttpLink(
-    'https://countries.trevorblades.com/graphql',
-  );
+  
 
   final AuthLink authLink = AuthLink(
     getToken: () => "",
@@ -16,42 +15,29 @@ class Api {
   CountryBaseModel? countries;
 
   Api() {
-    client = GraphQLClient(link: authLink.concat(httpLink), cache: GraphQLCache());
+    client = GraphQLClient(
+      link: authLink.concat(
+        HttpLink(
+        'https://countries.trevorblades.com/graphql',
+        )
+      ), 
+      cache: GraphQLCache()
+    );
   }
 
   Future getCountry() async {
-    final String query = '''
-    query {
-      countries {
-        name
-        languages {
-          code
-          name
-        }
-      }
-    }
-  ''';
     final QueryResult result = await client!.query(
       QueryOptions(
-        document: gql(query),
+        document: gql(countryQuery),
       ),
     );
-
     return json.encode(result.data);
   }
 
   Future getLanguages() async {
-    final String query = '''
-    query Query {
-      languages {
-        name
-        code
-      }
-    }
-  ''';
     final QueryResult result = await client!.query(
       QueryOptions(
-        document: gql(query),
+        document: gql(languageQuery),
       ),
     );
     return json.encode(result.data?['languages']);

@@ -22,7 +22,7 @@ class CountryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getCountryName() async {
+  Future countryByName() async {
     final result = await _api.getCountry();
     final decode = jsonDecode(result);
     final parse = CountryItem.fromJson(decode);
