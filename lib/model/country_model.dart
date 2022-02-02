@@ -1,21 +1,13 @@
-// To parse this JSON data, do
-//
-//     final country = countryFromJson(jsonString);
 
-import 'dart:convert';
 
-Country countryFromJson(String str) => Country.fromJson(json.decode(str));
-
-String countryToJson(Country data) => json.encode(data.toJson());
-
-class Country {
-  Country({
+class CountryBaseModel {
+  CountryBaseModel({
     required this.data,
   });
 
   Data data;
 
-  factory Country.fromJson(Map<String, dynamic> json) => Country(
+  factory CountryBaseModel.fromJson(Map<String, dynamic> json) => CountryBaseModel(
     data: Data.fromJson(json["data"]),
   );
 

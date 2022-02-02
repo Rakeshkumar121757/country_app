@@ -1,4 +1,4 @@
-import 'package:countries/provider/countryProvider.dart';
+import 'package:countries/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:countries/model/country_model.dart';
-import 'package:countries/services/api.dart';
+import 'package:countries/gql_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

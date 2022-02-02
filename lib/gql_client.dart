@@ -13,7 +13,7 @@ class Api {
     getToken: () => "",
   );
   GraphQLClient? client;
-  Country? countries;
+  CountryBaseModel? countries;
 
   Api() {
     client = GraphQLClient(link: authLink.concat(httpLink), cache: GraphQLCache());
