@@ -7,9 +7,9 @@ class Language {
   String code;
   String name;
 
-  factory Language.fromJson(Map<String, dynamic> json) => Language(
-    code: json["code"],
-    name: json["name"],
+  factory Language.fromJson(Map<String, dynamic> js) => Language(
+    code: js["code"],
+    name: js["name"],
   );
 
   Map<String, dynamic> toJson() => {

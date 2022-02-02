@@ -1,5 +1,3 @@
-
-
 import 'package:countries/model/language_model.dart';
 
 class CountryBaseModel {
@@ -7,29 +5,29 @@ class CountryBaseModel {
     required this.country_item,
   });
   CountryItem country_item;
-  factory CountryBaseModel.fromJson(Map<String, dynamic> json) => CountryBaseModel(
-    country_item: CountryItem.fromJson(json["data"]),
-  );
+  factory CountryBaseModel.fromJson(Map<String, dynamic> js) =>
+      CountryBaseModel(
+        country_item: CountryItem.fromJson(js["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": country_item.toJson(),
-  };
+        "data": country_item.toJson(),
+      };
 }
 
 class CountryItem {
   CountryItem({
     required this.countries,
   });
-
   List<CountryRemoteModel> countries;
-
-  factory CountryItem.fromJson(Map<String, dynamic> json) => CountryItem(
-    countries: List<CountryRemoteModel>.from(json["countries"].map((x) => CountryRemoteModel.fromJson(x))),
-  );
+  factory CountryItem.fromJson(Map<String, dynamic> js) => CountryItem(
+        countries: List<CountryRemoteModel>.from(
+            js["countries"].map((x) => CountryRemoteModel.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "countries": List<dynamic>.from(countries.map((x) => x.toJson())),
-  };
+        "countries": List<dynamic>.from(countries.map((x) => x.toJson())),
+      };
 }
 
 class CountryRemoteModel {
@@ -41,15 +39,15 @@ class CountryRemoteModel {
   String name;
   List<Language> languages;
 
-  factory CountryRemoteModel.fromJson(Map<String, dynamic> json) => CountryRemoteModel(
-    name: json["name"],
-    languages: List<Language>.from(json["languages"].map((x) => Language.fromJson(x))),
-  );
+  factory CountryRemoteModel.fromJson(Map<String, dynamic> js) =>
+      CountryRemoteModel(
+        name: js["name"],
+        languages: List<Language>.from(
+            js["languages"].map((x) => Language.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "languages": List<dynamic>.from(languages.map((x) => x.toJson())),
-  };
+        "name": name,
+        "languages": List<dynamic>.from(languages.map((x) => x.toJson())),
+      };
 }
-
-
