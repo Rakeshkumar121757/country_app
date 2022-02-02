@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:countries/model/country.dart';
+import 'package:countries/model/country_model.dart';
 import 'package:countries/services/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,12 @@ class CountryProvider extends ChangeNotifier {
   Api _api = Api();
   List<CountryElement> _countries = [];
   List<Language> _languages = [];
-  CountryElement _country;
+  CountryElement? _country;
 
   List<CountryElement> get countries => _countries;
   List<Language> get languages => _languages;
 
-  CountryElement get country => _country;
+  CountryElement? get country => _country;
 
   Future refreshScreen() async {
     notifyListeners();
@@ -41,7 +41,7 @@ class CountryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getCountryNameByCode(context, {String code}) async {
+  Future getCountryNameByCode(context, {required String code}) async {
     final result = await _api.getCountryByCode(context, code: code);
     if (result != null) {
       final decode = jsonDecode(result);

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CountrySearch extends StatefulWidget {
-  const CountrySearch({Key key}) : super(key: key);
+  const CountrySearch({Key? key}) : super(key: key);
 
   @override
   _CountrySearchState createState() => _CountrySearchState();
 }
 
 class _CountrySearchState extends State<CountrySearch> {
-  CountryProvider countryProvider;
+  CountryProvider? countryProvider;
   TextEditingController controller = TextEditingController();
-  String name;
+  String? name;
 
   @override
   void dispose() {
@@ -36,7 +36,7 @@ class _CountrySearchState extends State<CountrySearch> {
               Column(
                 children: [
                   ListTile(
-                    title: Text(name),
+                    title: Text(name??""),
                   ),
                   SizedBox(
                     height: 20,
@@ -60,7 +60,7 @@ class _CountrySearchState extends State<CountrySearch> {
               minWidth: double.infinity,
               height: 50,
               onPressed: () async {
-                name = await countryProvider.getCountryNameByCode(context,
+                name = await countryProvider!.getCountryNameByCode(context,
                     code: controller.text.trim().toUpperCase());
                 controller.clear();
               },

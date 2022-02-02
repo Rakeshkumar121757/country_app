@@ -1,36 +1,35 @@
 
-import 'package:countries/model/country.dart';
+import 'package:countries/model/country_model.dart';
 import 'package:countries/provider/countryProvider.dart';
 import 'package:countries/ui/country_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CountryScreen extends StatefulWidget {
-  CountryScreen({Key key, this.title}) : super(key: key);
+  CountryScreen({Key? key,}) : super(key: key);
 
-  final String title;
 
   @override
   _CountryScreenState createState() => _CountryScreenState();
 }
 
 class _CountryScreenState extends State<CountryScreen> {
-  CountryProvider countryProvider;
+  CountryProvider? countryProvider;
   List<CountryElement> _filterCountries = [];
 
   void initState() {
     super.initState();
 
     Future.delayed(Duration.zero, () async {
-      await countryProvider.getCountryName();
-      await countryProvider.getLanguages();
+      await countryProvider?.getCountryName();
+      await countryProvider?.getLanguages();
     });
   }
 
   @override
   void dispose() {
-    countryProvider.countries.clear();
-    countryProvider.languages.clear();
+    countryProvider?.countries.clear();
+    countryProvider?.languages.clear();
     _filterCountries.clear();
 
     super.dispose();
@@ -41,7 +40,7 @@ class _CountryScreenState extends State<CountryScreen> {
     countryProvider = Provider.of<CountryProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("Contact"),
         actions: [
           IconButton(
             onPressed: () {
@@ -60,7 +59,7 @@ class _CountryScreenState extends State<CountryScreen> {
               : IconButton(
                   onPressed: () {
                     _filterCountries.clear();
-                    countryProvider.refreshScreen();
+                    countryProvider?.refreshScreen();
                   },
                   icon: Icon(Icons.close),
                 ),
@@ -73,7 +72,7 @@ class _CountryScreenState extends State<CountryScreen> {
                 padding: EdgeInsets.symmetric(vertical: 4.0),
                 child: Text('${_filterCountries.length} is filter')),
           Expanded(
-            child: countryProvider.countries.isEmpty
+            child: countryProvider!.countries.isEmpty
                 ? Center(child: CircularProgressIndicator())
                 : _filterCountries.isEmpty
                     ? _buildList()
@@ -86,13 +85,13 @@ class _CountryScreenState extends State<CountryScreen> {
 
   Widget _buildList() {
     return ListView.builder(
-        itemCount: countryProvider.countries.length,
+        itemCount: countryProvider?.countries.length,
         itemBuilder: (context, index) {
-          final countryName = countryProvider.countries[index].name;
-          final countryLanguage = countryProvider.countries[index]?.languages;
+          final countryName = countryProvider?.countries[index].name;
+          final countryLanguage = countryProvider?.countries[index]?.languages;
           return ListTile(
-            title: Text(countryName),
-            subtitle: countryLanguage.isNotEmpty && countryLanguage[0] != null
+            title: Text(countryName??""),
+            subtitle: countryLanguage!.isNotEmpty && countryLanguage[0] != null
                 ? Text(countryLanguage[0].name)
                 : Text(""),
           );
@@ -104,7 +103,7 @@ class _CountryScreenState extends State<CountryScreen> {
         itemCount: _filterCountries.length,
         itemBuilder: (context, index) {
           final countryName = _filterCountries[index].name;
-          final countryLanguage = _filterCountries[index]?.languages;
+          final countryLanguage = _filterCountries[index].languages;
           return ListTile(
             title: Text(countryName),
             subtitle: countryLanguage.isNotEmpty && countryLanguage[0] != null
@@ -144,16 +143,16 @@ class _CountryScreenState extends State<CountryScreen> {
                 Expanded(
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: countryProvider.languages.length,
+                      itemCount: countryProvider?.languages.length,
                       itemBuilder: (context, index) {
-                        final name = countryProvider.languages[index].name;
+                        final name = countryProvider?.languages[index].name;
                         return ListTile(
                           onTap: ()async {
                             await filter(name);
-                            countryProvider.refreshScreen();
+                            countryProvider?.refreshScreen();
                             Navigator.of(context).pop();
                           },
-                          title: Text(name),);
+                          title: Text(name??""),);
                       }),
                 ),
                 const SizedBox(
@@ -185,7 +184,7 @@ class _CountryScreenState extends State<CountryScreen> {
 
   Future filter(languageName) async {
     List<CountryElement> _tempCountries = [];
-    _tempCountries.addAll(countryProvider.countries);
+    _tempCountries.addAll(countryProvider!.countries);
     for (var v in _tempCountries) {
       for (var l in v.languages) {
         if (l.name

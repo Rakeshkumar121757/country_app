@@ -10,7 +10,7 @@ String countryToJson(Country data) => json.encode(data.toJson());
 
 class Country {
   Country({
-    this.data,
+    required this.data,
   });
 
   Data data;
@@ -26,7 +26,7 @@ class Country {
 
 class Data {
   Data({
-    this.countries,
+    required this.countries,
   });
 
   List<CountryElement> countries;
@@ -42,8 +42,8 @@ class Data {
 
 class CountryElement {
   CountryElement({
-    this.name,
-    this.languages,
+    required this.name,
+    required this.languages,
   });
 
   String name;
@@ -51,7 +51,7 @@ class CountryElement {
 
   factory CountryElement.fromJson(Map<String, dynamic> json) => CountryElement(
     name: json["name"],
-    languages: List<Language>.from(json["languages"].map((x) => Language.fromJson(x))) ?? [],
+    languages: List<Language>.from(json["languages"].map((x) => Language.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -62,8 +62,8 @@ class CountryElement {
 
 class Language {
   Language({
-    this.code,
-    this.name,
+    required this.code,
+    required this.name,
   });
 
   String code;

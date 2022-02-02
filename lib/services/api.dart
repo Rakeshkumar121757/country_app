@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:countries/model/country.dart';
+import 'package:countries/model/country_model.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -12,13 +12,11 @@ class Api {
   final AuthLink authLink = AuthLink(
     getToken: () => "",
   );
-  Link link;
-  GraphQLClient client;
-  Country countries;
+  GraphQLClient? client;
+  Country? countries;
 
   Api() {
-    link = authLink.concat(httpLink);
-    client = GraphQLClient(link: link, cache: GraphQLCache());
+    client = GraphQLClient(link: authLink.concat(httpLink), cache: GraphQLCache());
   }
 
   Future getCountry() async {
@@ -33,7 +31,7 @@ class Api {
       }
     }
   ''';
-    final QueryResult result = await client.query(
+    final QueryResult result = await client!.query(
       QueryOptions(
         document: gql(query),
       ),
@@ -51,15 +49,15 @@ class Api {
       }
     }
   ''';
-    final QueryResult result = await client.query(
+    final QueryResult result = await client!.query(
       QueryOptions(
         document: gql(query),
       ),
     );
-    return json.encode(result.data['languages']);
+    return json.encode(result.data?['languages']);
   }
 
-  Future getCountryByCode(context, {String code}) async {
+  Future getCountryByCode(context, {required String code}) async {
     final String query = '''
     query Query {
       country(code: "$code") {
@@ -67,7 +65,7 @@ class Api {
       }
     }
   ''';
-    final QueryResult result = await client.query(
+    final QueryResult result = await client!.query(
       QueryOptions(
         document: gql(query),
       ),
