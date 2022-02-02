@@ -1,5 +1,5 @@
 import 'package:countries/provider/country_provider.dart';
-import 'package:countries/ui/country_screen.dart';
+import 'package:countries/screen/country_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

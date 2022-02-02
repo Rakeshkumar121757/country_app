@@ -1,7 +1,7 @@
 
 import 'package:countries/model/country_model.dart';
 import 'package:countries/provider.dart';
-import 'package:countries/ui/country_search_screen.dart';
+import 'package:countries/screen/country_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
