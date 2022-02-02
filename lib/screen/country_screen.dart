@@ -1,4 +1,3 @@
-
 import 'package:countries/model/country_model.dart';
 import 'package:countries/provider.dart';
 import 'package:countries/screen/search_screen.dart';
@@ -6,38 +5,39 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CountryScreen extends StatefulWidget {
-  CountryScreen({Key? key,}) : super(key: key);
-
+  CountryScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _CountryScreenState createState() => _CountryScreenState();
 }
 
 class _CountryScreenState extends State<CountryScreen> {
-  CountryProvider? countryProvider;
-  List<CountryRemoteModel> _filterCountries = [];
+  CountryProvider? provider;
+  List<CountryRemoteModel> _filter = [];
 
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero, () async {
-      await countryProvider?.countryByName();
-      await countryProvider?.getLanguages();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) async{
+      await provider?.countryByName();
+      await provider?.getLanguages();
     });
   }
 
   @override
   void dispose() {
-    countryProvider?.countries.clear();
-    countryProvider?.languages.clear();
-    _filterCountries.clear();
+    provider?.countries.clear();
+    provider?.languages.clear();
+    _filter.clear();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    countryProvider = Provider.of<CountryProvider>(context);
+    provider = Provider.of<CountryProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Contact"),
@@ -49,17 +49,17 @@ class _CountryScreenState extends State<CountryScreen> {
             },
             icon: Icon(Icons.search),
           ),
-          _filterCountries.isEmpty
+          _filter.isEmpty
               ? IconButton(
                   onPressed: () {
-                    onShowSymptom();
+                    filterBottomSheet();
                   },
                   icon: Icon(Icons.filter),
                 )
               : IconButton(
                   onPressed: () {
-                    _filterCountries.clear();
-                    countryProvider?.refreshScreen();
+                    _filter.clear();
+                    provider?.refreshScreen();
                   },
                   icon: Icon(Icons.close),
                 ),
@@ -67,30 +67,26 @@ class _CountryScreenState extends State<CountryScreen> {
       ),
       body: Column(
         children: [
-          if (_filterCountries.isNotEmpty)
-            Container(
-                padding: EdgeInsets.symmetric(vertical: 4.0),
-                child: Text('${_filterCountries.length} is filter')),
           Expanded(
-            child: countryProvider!.countries.isEmpty
+            child: provider!.countries.isEmpty
                 ? Center(child: CircularProgressIndicator())
-                : _filterCountries.isEmpty
-                    ? _buildList()
-                    : _buildFilterList(),
+                : _filter.isEmpty
+                    ? countrylist()
+                    : _filterlist(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildList() {
+  Widget countrylist() {
     return ListView.builder(
-        itemCount: countryProvider?.countries.length,
+        itemCount: provider?.countries.length,
         itemBuilder: (context, index) {
-          final countryName = countryProvider?.countries[index].name;
-          final countryLanguage = countryProvider?.countries[index]?.languages;
+          final countryName = provider?.countries[index].name;
+          final countryLanguage = provider?.countries[index]?.languages;
           return ListTile(
-            title: Text(countryName??""),
+            title: Text(countryName ?? ""),
             subtitle: countryLanguage!.isNotEmpty && countryLanguage[0] != null
                 ? Text(countryLanguage[0].name)
                 : Text(""),
@@ -98,12 +94,12 @@ class _CountryScreenState extends State<CountryScreen> {
         });
   }
 
-  Widget _buildFilterList() {
+  Widget _filterlist() {
     return ListView.builder(
-        itemCount: _filterCountries.length,
+        itemCount: _filter.length,
         itemBuilder: (context, index) {
-          final countryName = _filterCountries[index].name;
-          final countryLanguage = _filterCountries[index].languages;
+          final countryName = _filter[index].name;
+          final countryLanguage = _filter[index].languages;
           return ListTile(
             title: Text(countryName),
             subtitle: countryLanguage.isNotEmpty && countryLanguage[0] != null
@@ -113,7 +109,7 @@ class _CountryScreenState extends State<CountryScreen> {
         });
   }
 
-  onShowSymptom() {
+  filterBottomSheet() {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -128,14 +124,13 @@ class _CountryScreenState extends State<CountryScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             padding:
-                const EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 16),
+                const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Text(
-                  "Filter",
+                  "Languages",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10),
                 ),
                 const SizedBox(
                   height: 16,
@@ -143,33 +138,18 @@ class _CountryScreenState extends State<CountryScreen> {
                 Expanded(
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: countryProvider?.languages.length,
+                      itemCount: provider?.languages.length,
                       itemBuilder: (context, index) {
-                        final name = countryProvider?.languages[index].name;
+                        final name = provider?.languages[index].name;
                         return ListTile(
-                          onTap: ()async {
+                          onTap: () async {
                             await filter(name);
-                            countryProvider?.refreshScreen();
+                            provider?.refreshScreen();
                             Navigator.of(context).pop();
                           },
-                          title: Text(name??""),);
+                          title: Text(name ?? ""),
+                        );
                       }),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.redAccent,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
                 ),
                 const SizedBox(
                   height: 16,
@@ -184,13 +164,11 @@ class _CountryScreenState extends State<CountryScreen> {
 
   Future filter(languageName) async {
     List<CountryRemoteModel> _tempCountries = [];
-    _tempCountries.addAll(countryProvider!.countries);
+    _tempCountries.addAll(provider!.countries);
     for (var v in _tempCountries) {
       for (var l in v.languages) {
-        if (l.name
-            .toLowerCase()
-            .contains(languageName.toLowerCase())) {
-          _filterCountries.add(v);
+        if (l.name.toLowerCase().contains(languageName.toLowerCase())) {
+          _filter.add(v);
         }
       }
     }

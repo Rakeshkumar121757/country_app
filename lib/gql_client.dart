@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Api {
-  
-
   final AuthLink authLink = AuthLink(
     getToken: () => "",
   );
@@ -16,13 +14,10 @@ class Api {
 
   Api() {
     client = GraphQLClient(
-      link: authLink.concat(
-        HttpLink(
-        'https://countries.trevorblades.com/graphql',
-        )
-      ), 
-      cache: GraphQLCache()
-    );
+        link: authLink.concat(HttpLink(
+          'https://countries.trevorblades.com/graphql',
+        )),
+        cache: GraphQLCache());
   }
 
   Future getCountry() async {
@@ -58,12 +53,10 @@ class Api {
     );
     if (response.hasException) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Country Code doesn't exists"),
-        backgroundColor: Colors.red,
+        content: Text("Country not available"),
       ));
       return null;
     }
-
     return json.encode(response.data);
   }
 }

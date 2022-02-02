@@ -42,7 +42,7 @@ class CountryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getCountryNameByCode(context, {required String code}) async {
+  Future searchCountryByCode(context, {required String code}) async {
     final result = await _api.getCountryByCode(context, code: code);
     if (result != null) {
       final decode = jsonDecode(result);

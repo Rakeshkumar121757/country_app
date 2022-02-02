@@ -35,17 +35,14 @@ class CountryRemoteModel {
     required this.name,
     required this.languages,
   });
-
   String name;
   List<Language> languages;
-
   factory CountryRemoteModel.fromJson(Map<String, dynamic> js) =>
       CountryRemoteModel(
         name: js["name"],
         languages: List<Language>.from(
             js["languages"].map((x) => Language.fromJson(x))),
       );
-
   Map<String, dynamic> toJson() => {
         "name": name,
         "languages": List<dynamic>.from(languages.map((x) => x.toJson())),
